@@ -12,7 +12,7 @@ export declare class Auth {
     private _context;
     private _keyPair;
     private _keyPairCrypto;
-    private _encryptedCode;
+    _encryptedCode: string;
     constructor(_context: Context);
     private authenticate;
     authenticateWithQrCode(cpf: string, password: string, qrCodeId: string): Promise<void>;
