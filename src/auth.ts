@@ -23,7 +23,7 @@ type ExchangeCertificatesInput = RequestAuthenticationCodeInput & {
 export class Auth {
   private _keyPair: KeyPair = generateKeyPair();
   private _keyPairCrypto: KeyPair = generateKeyPair();
-  private _encryptedCode: string = "";
+  public _encryptedCode: string = "";
 
   public constructor(private _context: Context) {}
 
