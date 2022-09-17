@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import { Context } from "./context";
+import { KeyPair } from "./utils/cert";
 declare type RequestAuthenticationCodeInput = {
     cpf: string;
     password: string;
@@ -10,8 +11,8 @@ declare type ExchangeCertificatesInput = RequestAuthenticationCodeInput & {
 };
 export declare class Auth {
     private _context;
-    private _keyPair;
-    private _keyPairCrypto;
+    _keyPair: KeyPair;
+    _keyPairCrypto: KeyPair;
     _encryptedCode: string;
     constructor(_context: Context);
     private authenticate;
