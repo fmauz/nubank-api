@@ -62,15 +62,18 @@ export class Auth {
     if (cert) {
       this._context.http.cert = cert;
     }
-    const data = await this._context.http.request("post", "token", {
-      client_id: "legacy_client_id",
-      client_secret: "legacy_client_secret",
-      grant_type: "password",
-      login: cpf,
-      password,
-    });
-
-    this.updateAuthState(data);
+    try{
+      const data = await this._context.http.request("post", "token", {
+        client_id: "legacy_client_id",
+        client_secret: "legacy_client_secret",
+        grant_type: "password",
+        login: cpf,
+        password,
+      });
+      this.updateAuthState(data);
+    }catch(error: any) {
+      return Promise.reject(error);
+    }
   }
 
   public async authenticateWithRefreshToken(

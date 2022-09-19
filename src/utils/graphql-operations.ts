@@ -10,6 +10,37 @@ query GetAccountBalance {
 }
 `;
 
+export const QUERY_ACCOUNT_FEED_PAGINATED: string = `
+query GetFeedItems($cursor: String) {
+  viewer {
+    savingsAccount {
+      feedItems(cursor: $cursor) {
+        pageInfo {
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            id
+            title
+            detail
+            postDate
+            displayDate
+            footer
+            strikethrough
+            showClock
+            iconKey
+            detailsDeeplink
+            tags
+            kind
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
 export const QUERY_ACCOUNT_FEED: string = `
 query GetAccountFeed {
   viewer {

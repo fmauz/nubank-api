@@ -6,4 +6,5 @@ export declare class Payment {
     createBoleto(amount: number): Promise<Boleto>;
     createMoneyRequest(amount: number): Promise<MoneyRequest>;
     createPixPaymentRequest(pixKey: PixKey, amount: number): Promise<PixPaymentRequest>;
+    createPixPaymentRequestWithTX(pixKey: PixKey, amount: number, uid: string, message?: string): Promise<PixPaymentRequest>;
 }

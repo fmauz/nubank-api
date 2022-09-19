@@ -16,6 +16,7 @@ export declare class Account {
     }): Promise<Bill[]>;
     getBalance(): Promise<number>;
     getFeed(): Promise<AccountTransaction[]>;
+    getFeedPaginated(): Promise<AccountTransaction[]>;
     getTransactions(): Promise<AccountTransaction[]>;
     getInvestments(): Promise<Investment[]>;
     private getBillDetails;

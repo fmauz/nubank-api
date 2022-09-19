@@ -97,6 +97,13 @@ export class Account {
     return data?.viewer?.savingsAccount?.feed;
   }
 
+  public async getFeedPaginated(): Promise<AccountTransaction[]> {
+    const { data } = await this._context.http.graphql(
+      GqlOperations.QUERY_ACCOUNT_FEED_PAGINATED
+    );
+    return data?.viewer?.savingsAccount?.feed;
+  }
+
   public getTransactions(): Promise<AccountTransaction[]> {
     return this.getFeed().then((feed) =>
       feed.filter((statement) =>

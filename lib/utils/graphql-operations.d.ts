@@ -1,4 +1,5 @@
 export declare const QUERY_ACCOUNT_BALANCE: string;
+export declare const QUERY_ACCOUNT_FEED_PAGINATED: string;
 export declare const QUERY_ACCOUNT_FEED: string;
 export declare const QUERY_ACCOUNT_ID: string;
 export declare const QUERY_ACCOUNT_INVESTMENTS: string;
