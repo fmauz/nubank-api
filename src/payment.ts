@@ -53,4 +53,27 @@ export class Payment {
     );
     return moneyRequestData?.createMoneyRequest;
   }
+
+  public async createPixPaymentRequestWithTX(
+    pixKey: PixKey,
+    amount: number,
+    uid: string,
+    message?: string
+  ): Promise<PixPaymentRequest> {
+    const savingsAccountId: string = await this._context.account.getId();
+
+    const createPaymentRequestInput = {
+      amount,
+      pixAlias: pixKey.value,
+      savingsAccountId,
+      transactionId: uid,
+      message: message || null
+    };
+
+    const { data: moneyRequestData } = await this._context.http.graphql(
+      GqlOperations.MUTATION_CREATE_PIX_MONEY_REQUEST,
+      { createPaymentRequestInput }
+    );
+    return moneyRequestData?.createPaymentRequest;
+  }
 }
