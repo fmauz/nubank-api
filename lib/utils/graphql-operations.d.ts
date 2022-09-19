@@ -7,3 +7,4 @@ export declare const QUERY_GET_PIX_KEYS: string;
 export declare const MUTATION_CREATE_BOLETO: string;
 export declare const MUTATION_CREATE_MONEY_REQUEST: string;
 export declare const MUTATION_CREATE_PIX_MONEY_REQUEST: string;
+export declare const MUTATION_GET_PIX_TXID: string;

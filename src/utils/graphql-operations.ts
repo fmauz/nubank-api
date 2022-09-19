@@ -11,7 +11,7 @@ query GetAccountBalance {
 `;
 
 export const QUERY_ACCOUNT_FEED_PAGINATED: string = `
-query GetFeedItems($cursor: String) {
+query feed_items($cursor: String) {
   viewer {
     savingsAccount {
       feedItems(cursor: $cursor) {
@@ -189,6 +189,53 @@ mutation createPaymentRequest($createPaymentRequestInput: CreatePaymentRequestIn
       transactionId
       pixAlias
       brcode
+    }
+  }
+}
+`;
+
+export const MUTATION_GET_PIX_TXID: string = `
+query get_generic_receipt_screen($type: String!, $id: ID!) {
+  viewer {
+    savingsAccount {
+      getGenericReceiptScreen(type: $type, id: $id) {
+        screenShowShareAction
+        screenType
+        screenPieces {
+          __typename
+          fallbackMessage
+          ... on ReceiptHeaderPiece {
+            headerTitle
+            headerSubtitle
+          }
+          ... on ReceiptMessagePiece {
+            messageTitle
+            messageContent
+          }
+          ... on ReceiptFooterPiece {
+            footerTitle
+            footerContent
+          }
+          ... on ReceiptTablePiece {
+            tableHeader {
+              icon
+              title
+              subtitle
+              deeplinkWithMeta {
+                href
+                analytics {
+                  key
+                  value
+                }
+              }
+            }
+            tableItems {
+              label
+              value
+            }
+          }
+        }
+      }
     }
   }
 }

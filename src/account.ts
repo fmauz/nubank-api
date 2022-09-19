@@ -99,11 +99,12 @@ export class Account {
 
   public async getFeedPaginated(): Promise<AccountTransaction[]> {
     const { data } = await this._context.http.graphql(
-      GqlOperations.QUERY_ACCOUNT_FEED_PAGINATED
+      GqlOperations.QUERY_ACCOUNT_FEED_PAGINATED,
+      {}
     );
-    return data?.viewer?.savingsAccount?.feed;
+    return data;
   }
-
+  
   public getTransactions(): Promise<AccountTransaction[]> {
     return this.getFeed().then((feed) =>
       feed.filter((statement) =>
@@ -126,6 +127,59 @@ export class Account {
     }
     const response: any = await this._context.http.request("get", url);
     return response.bill;
+  }
+
+  public async getPixDetail(
+    txId: any
+  ): Promise<any> {
+    const getPixInfo = {
+      type: "TRANSFER_IN",
+      id: txId
+    };
+    const { data: get_pix_info } = await this._context.http.graphql(
+      GqlOperations.MUTATION_GET_PIX_TXID,
+      getPixInfo 
+    );
+    const data = get_pix_info?.viewer?.savingsAccount?.getGenericReceiptScreen?.screenPieces;
+    if(!data) return null;
+    const { footerTitle } = data.find((i:any) => i.__typename === "ReceiptFooterPiece");
+    
+    const titleToFind = "ID da transação:"
+    const endToEndId = footerTitle.toString().substring(footerTitle.toString().indexOf(titleToFind) + titleToFind.length - 1)
+    
+    const { tableItems } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && !i.tableHeader);
+    const valorLabel = tableItems.find((i: any)=>i.label==='Valor');
+    const typeLabel = tableItems.find((i: any)=>i.label==='Tipo de transferência');
+    const amount = parseFloat(valorLabel.value.replace(/R\$/gi, "").replace(/\./gi,"").trim().replace(",", "."));
+    
+    const { tableItems: tableItemsOrigem } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Origem");
+    const { tableItems: tableItemsDestino } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Destino");
+    const { tableItems: tableItemsGeneral } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Dados gerais do pagamento");
+
+    return {
+      endToEndId,
+      amount,
+      type: typeLabel.value,
+      identificador: tableItemsGeneral?.find((i: any)=>i.label==='Identificador')?.value,
+      origem: {
+        nome: tableItemsOrigem?.find((i: any)=>i.label==='Nome')?.value,
+        doc: tableItemsOrigem?.find((i: any)=>i.label==='CPF')?.value || tableItemsOrigem?.find((i: any)=>i.label==='CNPJ')?.value,
+        instituicao: tableItemsOrigem?.find((i: any)=>i.label==='Instituição')?.value,
+        agencia: tableItemsOrigem?.find((i: any)=>i.label==='Agência')?.value,
+        conta: tableItemsOrigem?.find((i: any)=>i.label==='Conta')?.value,
+        tipoConta: tableItemsOrigem?.find((i: any)=>i.label==='Tipo de conta')?.value,
+        chavePix: tableItemsOrigem?.find((i: any)=>i.label==='Chave Pix')?.value,
+      },
+      destino: {
+        nome: tableItemsDestino?.find((i: any)=>i.label==='Nome')?.value,
+        doc: tableItemsDestino?.find((i: any)=>i.label==='CPF')?.value || tableItemsDestino?.find((i: any)=>i.label==='CNPJ')?.value,
+        instituicao: tableItemsDestino?.find((i: any)=>i.label==='Instituição')?.value,
+        agencia: tableItemsDestino?.find((i: any)=>i.label==='Agência')?.value,
+        conta: tableItemsDestino?.find((i: any)=>i.label==='Conta')?.value,
+        tipoConta: tableItemsDestino?.find((i: any)=>i.label==='Tipo de conta')?.value,
+        chavePix: tableItemsDestino?.find((i: any)=>i.label==='Chave Pix')?.value,
+      }
+    }
   }
 
   private parseDate(dateStr: string): Date {

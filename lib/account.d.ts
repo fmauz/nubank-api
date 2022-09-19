@@ -20,5 +20,6 @@ export declare class Account {
     getTransactions(): Promise<AccountTransaction[]>;
     getInvestments(): Promise<Investment[]>;
     private getBillDetails;
+    getPixDetail(txId: any): Promise<any>;
     private parseDate;
 }
