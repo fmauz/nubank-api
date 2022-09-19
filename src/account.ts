@@ -145,7 +145,7 @@ export class Account {
     const { footerTitle } = data.find((i:any) => i.__typename === "ReceiptFooterPiece");
     
     const titleToFind = "ID da transação:"
-    const endToEndId = footerTitle.toString().substring(footerTitle.toString().indexOf(titleToFind) + titleToFind.length - 1)
+    const endToEndId = footerTitle.toString().substring(footerTitle.toString().indexOf(titleToFind) + titleToFind.length - 1).replace(":", "").trim();
     
     const { tableItems } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && !i.tableHeader);
     const valorLabel = tableItems.find((i: any)=>i.label==='Valor');
@@ -154,7 +154,7 @@ export class Account {
     
     const { tableItems: tableItemsOrigem } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Origem");
     const { tableItems: tableItemsDestino } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Destino");
-    const { tableItems: tableItemsGeneral } = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Dados gerais do pagamento");
+    const tableItemsGeneral = data.find((i:any) => i.__typename === "ReceiptTablePiece" && i?.tableHeader?.title === "Dados gerais do pagamento")?.tableItems;
 
     return {
       endToEndId,
